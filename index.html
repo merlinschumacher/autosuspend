@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Autosuspend : a daemon to suspend your server on certain conditions">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Autosuspend</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/merlinschumacher/autosuspend">View on GitHub</a>
+
+          <h1 id="project_title">Autosuspend</h1>
+          <h2 id="project_tagline">a daemon to suspend your server on certain conditions</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/merlinschumacher/autosuspend/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/merlinschumacher/autosuspend/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="autosuspend" class="anchor" href="#autosuspend"><span class="octicon octicon-link"></span></a>autosuspend</h1>
+
+<h1></h1>
+
+<p>Autosuspend is a python daemon that suspends a system if certain conditions are met, or not met.</p>
+
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<h1></h1>
+
+<p>python3 with the following modules:  os, sys, configparser, logging,  psutil,  subprocess,  time,  threading,  logging, http.server</p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<h1></h1>
+
+<p>It can currently check the following conditions:</p>
+
+<h3>
+<a name="ssh" class="anchor" href="#ssh"><span class="octicon octicon-link"></span></a>SSH:</h3>
+
+<pre><code>by matching user
+    any username that matches a given list blocks suspend
+by matching host
+    any hostname that matches a given list blocks suspend
+</code></pre>
+
+<h3>
+<a name="samba" class="anchor" href="#samba"><span class="octicon octicon-link"></span></a>SAMBA:</h3>
+
+<pre><code>any active Samba connection will block suspend.
+    Since this uses the output of smbstatus it (or the package that contains) it must be installed. Also it parses the output of smbstatus. 
+    **NOTICE**: If your smbstatus output doesn't use a ---- to divide the heading from list of connections it will fail
+</code></pre>
+
+<h3>
+<a name="load" class="anchor" href="#load"><span class="octicon octicon-link"></span></a>LOAD:</h3>
+
+<pre><code>if the current systemload is greater than a given value suspend will be blocked.
+    **NOTICE**: Change the load according to your system. For example: A load of 2.7 is very high for a single cpu system, while it is light load for a quad-cpu system.
+</code></pre>
+
+<h3>
+<a name="ping" class="anchor" href="#ping"><span class="octicon octicon-link"></span></a>PING:</h3>
+
+<pre><code>if one of the hosts respond to a ICMP request suspend will be blocked
+</code></pre>
+
+<h3>
+<a name="processes" class="anchor" href="#processes"><span class="octicon octicon-link"></span></a>PROCESSES:</h3>
+
+<pre><code>if currently running processes match the suspend will be blocked.
+    You might use this to hinder the system from suspending when for example your rsync runs
+</code></pre>
+
+<h3>
+<a name="webserver" class="anchor" href="#webserver"><span class="octicon octicon-link"></span></a>WEBSERVER:</h3>
+
+<pre><code>if a http connection is made to the port the system will suspend immediately
+    This is a way to directly initiate a suspend. If you open the port in a webbrowser the suspend will be initiated immediately.
+    **NOTICE**: For safety reasons you should set a password. This might not be secure, but will make it harder to suspend the system by accident. 
+    you can disable the password by leaving it empty.
+    The suspending by webserver is not checking for the other conditions to apply. it will suspend instantly
+</code></pre>
+
+<h2>
+<a name="acknowledgements" class="anchor" href="#acknowledgements"><span class="octicon octicon-link"></span></a>Acknowledgements</h2>
+
+<h1></h1>
+
+<p><em>daemon.py</em> by <a href="http://workaround.cz/daemon-in-python-3/">http://workaround.cz/daemon-in-python-3/</a></p>
+
+<h2>
+<a name="example-configuration-file" class="anchor" href="#example-configuration-file"><span class="octicon octicon-link"></span></a>Example configuration file</h2>
+
+<h1></h1>
+
+<p>The following options should be put in /etc/autosuspend.conf</p>
+
+<pre><code>[autosuspend]
+interval=600
+debug=true
+ping=true
+pinghosts=client,raspberrypi
+ssh=true
+sshusers=user,user2
+sshhosts=client2,raspberrypi
+webhost=true
+webport=4567
+webpass=password
+smb=true
+loadthreshold=1.5
+processes=rsync,clamav
+suspend_cmd = /bin/echo
+logfile = /var/log/autosuspend.log
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Autosuspend maintained by <a href="https://github.com/merlinschumacher">merlinschumacher</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
